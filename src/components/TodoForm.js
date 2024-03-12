@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { add, updateForm } from '../redux/todoSlice';
+import { add, updateForm ,resetSelected,toggleForm} from '../redux/todoSlice';
 
 const TodoForm = () => {
     const dispatch = useDispatch();
     const selectedTask = useSelector((state) => state.taskReducer.selectedTask);
+    const viewForm= useSelector((state)=> state.taskReducer.viewForm);
     if (selectedTask) {
         console.log(selectedTask, "this is selcted task")
     }
     const [tasktext, setTaskText] = useState('');
     const [date, setDate] = useState('');
     const [des, setDes] = useState('');
-    const [viewForm,setViewForm]=useState(false);
+    // const [viewForm,setViewForm]=useState(false);
 
     useEffect(()=>{
         if(selectedTask){
@@ -26,7 +27,7 @@ const TodoForm = () => {
             setDate('');
             setDes('');
         }
-    },[selectedTask])
+    },[selectedTask]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -36,7 +37,8 @@ const TodoForm = () => {
                 name: tasktext,
                 description: des,
                 date: date
-            }))
+            }));
+            dispatch(resetSelected());
             reset();
         }
         else{
@@ -54,11 +56,12 @@ const TodoForm = () => {
         setDate('');
         setTaskText('');
         setDes('');
+        dispatch(resetSelected());
     }
 
     return (
         <div>
-        <button onClick={()=> setViewForm(!viewForm)}>
+        <button onClick={()=> dispatch(toggleForm())}>
             {viewForm ? "Hide Form" : "Add New Task"}
         </button>
         {viewForm && (
@@ -67,6 +70,7 @@ const TodoForm = () => {
                 <textarea placeholder='add description...' required onChange={(e) => setDes(e.target.value)} value={des} />
                 <input type="date" min={moment().format("YYYY-MM-DD")} onChange={(e) => setDate(e.target.value)} required value={date} />
                 <button type="submit">{selectedTask ? "Update Task" : "Add Task"}</button>
+                <button type="submit" disabled={tasktext === ''} onClick={reset}>Reset</button>
             </form>
         )}
     </div>

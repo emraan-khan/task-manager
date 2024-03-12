@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggle, deleteTask, updateTask } from '../redux/todoSlice';
+import { toggle, deleteTask, updateTask,toggleForm } from '../redux/todoSlice';
 
 const TodoList = () => {
     const dispatch = useDispatch();
     const tasks = useSelector(state => state.taskReducer.tasks);
+    const viewForm = useSelector((state)=> state.taskReducer.viewForm);
+
     const [filter, setFilter] = useState('all');
     const [viewList, setViewList] = useState(false)
 
@@ -17,6 +19,8 @@ const TodoList = () => {
     };
 
     function handleEdit(id) {
+        if(!viewForm)
+        dispatch(toggleForm());
         dispatch(updateTask({ id }));
     }
 

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
 
 const intitialState = {
     tasks: [{
@@ -20,7 +19,6 @@ const taskSlice = createSlice({
         add: (state, action) => {
             state.tasks = [{ id: action.payload.id, name: action.payload.name, date: action.payload.date, description: action.payload.description, completed: false }, ...state.tasks];
         },
-
         toggle: (state, action) => {
             console.log(action.payload.id, "this is id");
             state.tasks = state.tasks.map((task, i) => {
@@ -53,12 +51,15 @@ const taskSlice = createSlice({
         },
         toggleForm:(state,action)=>{
             state.viewForm=!state.viewForm;
+        },
+        resetSelected: (state,action)=>{
+            state.selectedTask=null;
         }
     }
 });
 
 export const taskReducer = taskSlice.reducer;
 
-export const { add, toggle, deleteTask, updateTask , updateForm,toggleForm } = taskSlice.actions;
+export const { add, toggle, deleteTask, updateTask , updateForm,toggleForm , resetSelected  } = taskSlice.actions;
 
 
